@@ -14,7 +14,7 @@ class AnalysisTest {
   static final Set<State> fizzExpected = EnumSet.of(State.FIZZ);
   static final Set<State> fizzBuzzExpected = EnumSet.of(State.BUZZ, State.FIZZ);
   static final Set<State> buzzExpected = EnumSet.of(State.BUZZ);
-  static final Set<State> neitherExpected = EnumSet.noneOf(State.class); // Empty set
+  static final Set<State> neitherExpected = EnumSet.noneOf(State.class); // Set.of()
 
   final Analysis analysis = new Analysis();
 
@@ -45,28 +45,7 @@ class AnalysisTest {
   @ParameterizedTest
   @ValueSource(ints = {-1, -3, -5, -15})
   void analyze_negative(int value) {
-    try {
-      analysis.analyze(value);
-      fail();
-    } catch (IllegalArgumentException e) {
-      // Do nothing; this is the expected behavior.
-      assertThrows(IllegalArgumentException.class, new InvalidInvocation(value));
-    }
-  }
-
-  private class InvalidInvocation implements Executable {
-
-    private final int value;
-
-    public InvalidInvocation(int value) {
-      this.value = value;
-    }
-
-    @Override
-    public void execute() throws Throwable {
-      analysis.analyze(value);
-    }
-
+    assertThrows(IllegalArgumentException.class, new InvalidInvocation(analysis, value));
   }
 
 }
